@@ -9,22 +9,47 @@ const CategoryProduct = ({title, image, specs, features, price, stock}) => {
 
         <figure>
             <div className='category_product-image-container'>
-            <img src={`,/assets/${image}` }alt={title}/>
+            <img src={`/assets/${image}` }alt={title}/>
             </div>
         </figure>
 
         <aside >
-            
             <div className='category-product-info-capacity'>
             <h3>Dimensions</h3>
             <label>{specs.dimensions}</label>
             </div>
 
+            {(specs.capacity &&
             <div className='category-product-info-capacity'>
             <h3>capacity</h3>
             <label>{specs.capacity}</label>
             </div>
+            )}
+
+<div className="category-product-info-features">
+                    <h3>Features</h3>
+                    <ul>
+                        {features?.map((f) => {
+                            return <li>{f}</li>
+                        })} 
+                    </ul>
+                </div>
         </aside>
+
+        <aside className="category-product-finace">
+                <div className="category-product-finance-price">
+                  &#8377;{price}
+                </div>
+                <div className="category-product-info-stock">
+                    <label>Stock level: {stock}</label>
+                    <label>FREE Delivery</label>
+                </div>
+
+                <div className="category-product-action">
+                    <button>View Product</button>
+                    <button>Add to Basket</button>
+                </div>
+            </aside>
         </article>
     )
 }

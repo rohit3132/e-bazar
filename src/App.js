@@ -11,17 +11,16 @@ function App() {
   const [products, setProducts] = useState({errorMessage:'',  data: []});
 
 React.useEffect(() => {
-  const fetchData = async () =>{
+  const fetchData = async () => {
   const responseObject =  await getCategories();
   setCategories(responseObject);
   }
 fetchData();
 }, [])
 
-const handleCategoryClick = id =>{
-
-  const fetchData = async () =>{
-    const responseObject =  await getProducts();
+const handleCategoryClick = id => {
+  const fetchData = async () => {
+    const responseObject =  await getProducts(id);
     setProducts(responseObject);
     }
   fetchData();
@@ -34,9 +33,7 @@ const renderCatgories = () => {
 }
 
 const renderProducts = () => {
-  return products.data.map(p =>  <CategoryProduct key={p.id} {...p}>{p.title}</CategoryProduct>
-    
-    )
+  return products.data.map(p =>  <CategoryProduct key={p.id} {...p}>{p.title}</CategoryProduct>);
 }
 
   return (
