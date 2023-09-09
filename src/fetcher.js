@@ -5,7 +5,7 @@ const fetcher = async (url) => {
    try {
 const Response = await fetch(BASE_URL + url);
 if(!Response.ok){
-   throw new Error('HTTP Error ${Response.status}')
+   throw new Error(`HTTP Error ${Response.status}`)
 }
 const ResponseData = await Response.json();
 responseObject.errorMessage = '';
@@ -23,4 +23,8 @@ export const getCategories = () => {
 
 export const getProducts = id => {
    return fetcher('/products?catId=' + id);
+}
+
+export const getProductById = id => {
+   return fetcher (`/products/`+id);
 }
