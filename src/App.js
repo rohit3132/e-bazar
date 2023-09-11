@@ -59,3 +59,4 @@ const renderProducts = () => {
 }
 
 export default App;
+

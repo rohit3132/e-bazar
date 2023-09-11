@@ -1,38 +1,50 @@
 import React from 'react'
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-const CategoryProduct = ({id, title, image, specs, features, price, stock}) => {
-    const navigate = useNavigate();
-    return(
-        <article>
+import { getProductById } from '../fetcher';
+
+const ProductDetail = () => {
+    const [product, setProduct] = React.useState({errorMessage:'',  data: {}});
+    const {productId} = useParams();
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const responseObject = await getProductById(productId);
+            setProduct(responseObject);
+        }
+        fetchData();
+    }, [productId]);
+
+  return (
+    <article>
             <div className='category-product-title'>
-                <Link to={`products/${id}`}>{title}</Link>
+                {product.data.title}
             </div>
 
             <figure>
                 <div className='category_product-image-container'>
-                <img src={`/assets/${image}` } alt={title} />
+                <img src={`/assets/${product.data.image}` } alt={product.data.title} />
                 </div>
             </figure>
 
             <aside >
                 <div className='category-product-info-dimensions'>
                     <h3>Dimensions</h3>
-                    <label>{specs.dimensions}</label>
+                    <label>{product.data.specs?.dimensions}</label>
                 </div>
 
-                {(specs.capacity &&
+                {(product.data.specs?.capacity &&
                 <div className='category-product-info-capacity'>
                     <h3>capacity</h3>
-                    <label>{specs.capacity}</label>
+                    <label>{product.data.specs?.capacity}</label>
                 </div>
                 )}
 
                 <div className="category-product-info-features">
                     <h3>Features</h3>
                     <ul>
-                        {features?.map((f,i) => {
+                        {product.data.features?.map((f,i) => {
                             return <li key={`feature${i}`}>{f}</li>
                         })} 
                     </ul>
@@ -41,20 +53,21 @@ const CategoryProduct = ({id, title, image, specs, features, price, stock}) => {
 
             <aside className="category-product-finace">
                 <div className="category-product-finance-price">
-                    &#8377;{price}
+                    &#8377;{product.data.price}
                 </div>
                 <div className="category-product-info-stock">
-                    <label>Stock level: {stock}</label>
+                    <label>Stock level: {product.data.stock}</label>
                     <label>FREE Delivery</label>
                 </div>
 
                 <div className="category-product-action">
-                    <button onClick={() => navigate(`products/${id}`)}>View Product</button>
                     <button>Add to Basket</button>
                 </div>
             </aside>
+
+            <div>{product.data?.description}</div>
         </article>
-    )
+  )
 }
 
-export default CategoryProduct;
+export default ProductDetail;
