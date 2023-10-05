@@ -1,40 +1,53 @@
-import React from 'react'
+import React, { useContext } from "react";
 
 import { Link, useNavigate } from 'react-router-dom';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
-const CategoryProduct = ({id, title, image, specs, features, price, stock}) => {
+import { CartContext } from "../context/cartContext";
+
+
+const CategoryProduct = ({
+    id,
+    title, 
+    image, 
+    specs,
+    features,
+    price,
+    stock
+}) => {
     const navigate = useNavigate();
-    return(
-        <ProductInfoArticle>
-            <ProductTitle >
-                <Link to={`products/${id}`}>{title}</Link>
+    const { addProduct } = useContext(CartContext);
+
+    return (
+        <ProductArticle>
+            <ProductTitle>
+                <Link to={`/products/${id}`}>{title}</Link>
             </ProductTitle>
 
             <figure>
-                <ProductImageContainer >
-                <ProductImage src={`/assets/${image}` } alt={title} />
+                <ProductImageContainer>
+                    <ProductImageContainerImg src={`/assets/${image}`} alt={title}/>
                 </ProductImageContainer>
             </figure>
 
-            <aside >
+            <aside>
                 <ProductInfo>
-                    <ProductInfoHeader>Dimensions</ProductInfoHeader>
+                    <ProductHeader>Dimensions</ProductHeader>
                     <label>{specs.dimensions}</label>
                 </ProductInfo>
 
-                {(specs.capacity &&
+                {specs.capacity && (
                 <ProductInfo>
-                    <ProductInfoHeader>capacity</ProductInfoHeader>
+                    <ProductHeader>Capacity</ProductHeader>
                     <label>{specs.capacity}</label>
                 </ProductInfo>
                 )}
 
                 <ProductInfo>
-                    <ProductInfoHeader>Features</ProductInfoHeader>
+                    <ProductHeader>Features</ProductHeader>
                     <ul>
-                        {features?.map((f,i) => {
+                        {features?.map((f, i) => {
                             return <ProductInfoListItem key={`feature${i}`}>{f}</ProductInfoListItem>
                         })} 
                     </ul>
@@ -43,25 +56,28 @@ const CategoryProduct = ({id, title, image, specs, features, price, stock}) => {
 
             <aside>
                 <ProductInfoFinancePrice>
-                    &#8377;{price}
+                  &#8377;{price}
                 </ProductInfoFinancePrice>
+
                 <ProductInfoStock>
-                    <ProductInfoStockLabel>Stock level: {stock}</ProductInfoStockLabel>
+                <ProductInfoStockLabel>
+                        Stock Level: {stock}
+                    </ProductInfoStockLabel>
                     <ProductInfoStockLabel>FREE Delivery</ProductInfoStockLabel>
                 </ProductInfoStock>
 
-                <ProductInfoAction>
-                    <ProductInfoActionButton onClick={() => navigate(`/products/${id}`)}>View Product</ProductInfoActionButton>
-                    <ProductInfoActionButton>Add to Basket</ProductInfoActionButton>
-                </ProductInfoAction>
-            </aside>
-        </ProductInfoArticle>
+                <ProductAction>
+                    <ProductActionButton onClick={() => navigate(`/products/${id}`)}>View Product</ProductActionButton>
+                    <ProductActionButton onClick={() => addProduct({id, title, price})}>Add to Basket</ProductActionButton>
+                </ProductAction>
+            </aside> 
+        </ProductArticle>
     )
 }
 
 export default CategoryProduct;
 
-const ProductInfoArticle = styled.article`
+const ProductArticle = styled.article`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 0.25fr 1fr 0.25fr;
@@ -69,19 +85,19 @@ const ProductInfoArticle = styled.article`
 `;
 
 const ProductTitle = styled.div`
-        grid-column: 1 / span 3;
-        color: darkslategray;
-        font-weight: bold;
-        font-size: 1.5em;
-        padding-left: 10px;
-    `;
+    grid-column: 1 / span 3;
+    color: darkslategray;
+    font-weight: bold;
+    font-size: 1.5em;
+    padding-left: 10px;
+`;
 
 const ProductImageContainer = styled.div`
     padding: 10px;
     width: 60%;
 `;
 
-const ProductImage = styled.img`
+const ProductImageContainerImg = styled.img`
     width: 100%;
     height: 100%;
 `;
@@ -91,7 +107,7 @@ const ProductInfo = styled.div`
     flex-direction: column;
 `;
 
-const ProductInfoHeader = styled.h3`
+const ProductHeader = styled.h3`
     color: darkslategray;
     font-size: 1em;
     font-weight: bold;
@@ -103,13 +119,20 @@ const ProductInfoListItem = styled.li`
     padding-top: 5px;
 `;
 
+const ProductInfoFinancePrice = styled.div`
+    color: darkslategray;
+    font-size: 2em;
+    font-weight: bold;
+    padding-top: 10px;
+`;
+
 const ProductInfoStock = styled.div`
     padding-left: 10px;
     margin-top: 20px;
     padding-top: 10px;
     background-color: lightgrey;
-    height: 20%;
-    width: 30%;
+    height: 25%;
+    width: 40%;
     border-radius: 5px;
     font-weight: bold;
     display: flex;
@@ -120,12 +143,12 @@ const ProductInfoStockLabel = styled.label`
     padding-bottom: 5px;
 `;
 
-const ProductInfoAction = styled.div`
+const ProductAction = styled.div`
     display: flex;
     flex-direction: column;
 `;
 
-const ProductInfoActionButton = styled.button`
+const ProductActionButton = styled.button`
     width: 160px;
     height: 30px;
     border-radius: 10px;
@@ -133,11 +156,4 @@ const ProductInfoActionButton = styled.button`
     background-color: lightgray;
     border: solid 1px slategrey;
     font-weight: bold;
-`;
-
-const ProductInfoFinancePrice = styled.div`
-    color: darkslategray;
-    font-size: 2em;
-    font-weight: bold;
-    padding-top: 10px;
 `;
