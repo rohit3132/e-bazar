@@ -10,6 +10,7 @@ import Category from './components/Category';
 import Layout from './components/layout';
 import Home from './components/home';
 import OrderConfirmation from "./components/orderconfirmation";
+import searchResults from "./components/searchResults";
 
 import {
   BrowserRouter,
@@ -43,7 +44,9 @@ fetchData();
         <Route path="checkout" element={<Checkout />} />
         <Route path="orderconfirmation" element={<OrderConfirmation />} />
         <Route path="products/:productId" element={<ProductDetail />} />
+        <Route/>
         <Route path="categories/:categoryId" element={<Category />} />
+        <Route path="search" element={<searchResults/>} />
         </Route>
       </Routes>
     </BrowserRouter>

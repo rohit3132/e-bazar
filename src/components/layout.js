@@ -3,6 +3,8 @@ import React from 'react'
 import { Link, Outlet } from 'react-router-dom';
 import { HomeIcon, CartIcon } from './icons';
 
+import Search from "./search";
+
 const Layout = ({categories}) => {
     const renderCategories = () => {
         return categories.data.map((c) => (
@@ -18,6 +20,9 @@ const Layout = ({categories}) => {
           <div id='headerHomeIcon'>
             <Link to='/'><HomeIcon width={40} /></Link>
           </div>
+
+          <Search/>
+
           <div id="headerTitle">E bazar</div>
           <div id='headerCartIcon'>
             <Link to='/basket'><CartIcon width={40} /></Link>
