@@ -1,17 +1,64 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import styled from 'styled-components';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-const Checkout = () => {
-    const navigate = useNavigate();
-    const confirmOrder = (ev) => {
-        navigate('/orderconfirmation');
+const Checkout  = () => {
+    const [form, setForm] = useState({
+        name: '',
+        email: '',
+        shippingAddress1: '',
+        touched: {
+            name: false,
+            email: false,
+            shippingAddress1: false
+        }
+    });
+  const navigate = useNavigate();
+
+  const errors ={
+    name: form.name.length === 0,
+    email: form.email.length ===0,
+    shippingAddress1: form.shippingAddress1.length ===0
+    };
+    const disabled = Object.keys(errors).some((x) => errors[x]);
+
+  const handleChange = (ev) => {
+    const { name, value } = ev.target;
+
+    setForm((prevState) => {
+        return {
+            ...prevState,
+            [name]: value
+        }
+    })
+  };
+
+  const handleSubmit = ev => {
+    if (disabled){
+        ev.preventDefault();
+        return;
     }
+    navigate('/orderconfirmation');
+  };
 
-    return (
-        <form>
+  const  handleBlur =(ev) => {
+    const { name } = ev.target;
+
+    setForm((prevState) => {
+        return {
+            ...prevState,
+            touched: { [name]: true}
+
+        }
+    })
+  };
+
+  const showError = field => errors[field]? form.touched[field] : false;
+
+  return (
+    <form onSubmit={handleSubmit}>
             <CheckoutContainer>
                 {/* Row 1 */}
                 <CheckoutTitle>Shopping Checkout</CheckoutTitle>
@@ -26,17 +73,23 @@ const Checkout = () => {
 
                 {/* Row 6 */}
                 <CheckoutTable>
-                    <CheckoutFormLabel>Name</CheckoutFormLabel>
+                    <CheckoutFormLabel>Name *</CheckoutFormLabel>
                     <CheckoutInput
                         type="text"
                         name="name"
+                        onChange={handleChange}
                         placeholder="Enter name"
+                        invalid={showError("name")}
+                        onBlur={handleBlur}
                     />
-                    <CheckoutFormLabel>Email</CheckoutFormLabel>
+                    <CheckoutFormLabel>Email *</CheckoutFormLabel>
                     <CheckoutInput
                         type="text"
                         name="email"
+                        onChange={handleChange}
                         placeholder="Enter email"
+                        invalid={showError("email")}
+                        onBlur={handleBlur}
                     />
                 </CheckoutTable>
 
@@ -52,25 +105,21 @@ const Checkout = () => {
                 <CheckoutTable>
                     <CheckoutFormLabel>Copy to shipping</CheckoutFormLabel>
                     <CheckoutFormCheckbox type="checkbox" />
-
                     <CheckoutFormLabel>Billing Address</CheckoutFormLabel>
-
                     <CheckoutAddress>
-                        <input
-                            type="text"
-                            name="billingAddress1"
-                        />
+                        <input type="text" name="billingAddress1"/>
                         <input type="text" name="billingAddress2" />
                         <input type="text" name="billingCity" />
                     </CheckoutAddress>
-
-                    <CheckoutFormLabel>Shipping Address</CheckoutFormLabel>
-
+                    <CheckoutFormLabel>Shipping Address *</CheckoutFormLabel>
                     <CheckoutAddress>
                         <CheckoutInput
                             type="text"
                             name="shippingAddress1"
-                            placeholder="Enter first address line"
+                            onChange={handleChange}
+                            placeholder="Enter the shipping address"
+                            invalid={showError("shippingAddress1")}
+                            onBlur={handleBlur}
                         />
                         <input type="text" name="shippingAddress2" />
                         <input type="text" name="shippingCity" />
@@ -81,14 +130,13 @@ const Checkout = () => {
                     Cancel
                 </CancelButton>
 
-                <CheckoutButton onClick={confirmOrder}>
+                <CheckoutButton disabled={disabled}>
                     Confirm Order
                 </CheckoutButton>
             </CheckoutContainer>
         </form>
-    );
+  );
 };
-
 
 export default Checkout;
 
@@ -123,7 +171,6 @@ const CheckoutTitle = styled.h2`
 
 const CheckoutAddress = styled.div`
     display: grid;
-
     grid-template-rows: 0.25fr 0.25fr 0.25fr 0.25fr;
     grid-template-columns: 1fr;
     grid-row-gap: 10px;
@@ -134,15 +181,14 @@ const CheckoutFormLabel = styled.label`
 `;
 
 const CheckoutInput = styled.input`
+    ${(props) => props.invalid &&
+        `
+        border-width: 3px;
+        border-color: red;
+    `};
+    
     border-width: 1px;
     border-style: solid;
-
-    ${(props) =>
-        props.invalid &&
-        `
-        border-color: red;
-        border-width: 3px;
-    `}
 `;
 
 const CheckoutFormCheckbox = styled.input`

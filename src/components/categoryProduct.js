@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 
-import { CartContext } from "../context/cartContext";
+import { CartContext } from "../contexts/cartContext";
 
 
 const CategoryProduct = ({

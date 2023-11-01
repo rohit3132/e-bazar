@@ -4,7 +4,7 @@ import styled  from 'styled-components';
 
 import { Link , useNavigate} from 'react-router-dom';
 
-import { CartContext } from '../context/cartContext';
+import { CartContext } from "../contexts/cartContext";
 
 import { TrashIcon, UpIcon, DownIcon } from "./icons";
 
